@@ -45,10 +45,10 @@ class GpsDataSourceImpl implements GpsDataSource {
 
   @override
   Stream<LocationPoint> get locationStream {
-    // ✅ Usa LocationSettings (obligatorio desde geolocator v10+)
+    //  Usa LocationSettings (obligatorio desde geolocator v10+)
     final locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
-      distanceFilter: 2, // ✅ int (metros), no double
+      distanceFilter: 2, //  int (metros)
     );
 
     Geolocator.getPositionStream(locationSettings: locationSettings)

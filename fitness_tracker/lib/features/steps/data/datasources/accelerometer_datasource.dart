@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
-import 'dart:io' show Platform; // ✅ Importa Platform desde dart:io
+
 import 'package:sensors_plus/sensors_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import '../../../../core/platform/notification_datasource.dart';
 import '../../domain/entities/step_data.dart';
 
@@ -24,17 +24,23 @@ class AccelerometerDataSourceImpl implements AccelerometerDataSource {
   static const int _notificationThreshold = 30;
   bool _goalNotified = false;
 
-  final StreamController<StepData> _controller = StreamController<StepData>.broadcast();
+  // Initializa stream controller 
+  late StreamController<StepData> _controller = StreamController<StepData>.broadcast();
 
   @override
   Stream<StepData> get stepStream => _controller.stream;
 
   @override
   Future<void> startCounting() async {
-    final stream = accelerometerEventStream as Stream<AccelerometerEvent>;
+    // Asegurarse de que el controlador de flujo se inicialice si es necesario
+    if (_controller.isClosed) {
+      _controller = StreamController<StepData>.broadcast();
+    }
+
+    final stream = accelerometerEventStream();
+
     _subscription = stream.listen((AccelerometerEvent event) {
       final magnitude = math.sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
-
       _magnitudeHistory.add(magnitude);
       if (_magnitudeHistory.length > _historySize) {
         _magnitudeHistory.removeAt(0);
@@ -48,33 +54,38 @@ class AccelerometerDataSourceImpl implements AccelerometerDataSource {
           _notificationDataSource.showStepGoalNotification(_stepCount);
         }
       }
-      _lastMagnitude = magnitude;
 
+      _lastMagnitude = magnitude;
       final activityType = _determineActivity(avgMagnitude);
-      _controller.add(StepData(
-        stepCount: _stepCount,
-        activityType: activityType,
-        magnitude: avgMagnitude,
-        fallDetected: magnitude > 25.0,
-      ));
+
+      // asegura de agregar eventos solo si el controlador está abierto
+      if (!_controller.isClosed) {
+        _controller.add(StepData(
+          stepCount: _stepCount,
+          activityType: activityType,
+          magnitude: avgMagnitude,
+          fallDetected: magnitude > 25.0,
+        ));
+      }
     });
   }
 
   @override
   Future<void> stopCounting() async {
     await _subscription?.cancel();
-    _controller.close();
+    //Cierra el controlador de flujo solo cuando dejas de contar
+    if (!_controller.isClosed) {
+      await _controller.close();
+    }
     _stepCount = 0;
     _goalNotified = false;
   }
 
   @override
   Future<bool> requestPermissions() async {
-    if (Platform.isAndroid) {
-      var status = await Permission.sensors.request();
-      return status.isGranted;
-    }
-    return true; // iOS no requiere permiso explícito
+    // El acelerómetro no requiere permisos en Android o iOS. 
+    // No es necesario solicitar permisos para usar accelerometerEventStream.
+    return true;
   }
 
   ActivityType _determineActivity(double magnitude) {
