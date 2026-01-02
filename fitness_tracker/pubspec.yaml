@@ -44,17 +44,17 @@ dependencies:
 
 
 
+
   #  Autenticación biométrica
   local_auth: ^2.2.0
-
-  
 
   #  Sensores (acelerómetro, etc.)
   sensors_plus: ^5.0.0
 
-
 #  Ubicación y GPS
   geolocator: ^12.0.0
+
+
 
 
   # Manejo de permisos
