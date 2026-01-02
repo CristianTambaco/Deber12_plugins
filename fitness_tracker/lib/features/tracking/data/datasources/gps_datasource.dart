@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import '../../../../core/platform/notification_datasource.dart';
+import '../../../../core/notification_datasource.dart';
 import '../../domain/entities/location_point.dart';
 
 abstract class GpsDataSource {

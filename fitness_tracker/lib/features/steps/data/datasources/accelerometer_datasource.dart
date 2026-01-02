@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:sensors_plus/sensors_plus.dart';
 
-import '../../../../core/platform/notification_datasource.dart';
+import '../../../../core/notification_datasource.dart';
 import '../../domain/entities/step_data.dart';
 
 abstract class AccelerometerDataSource {
