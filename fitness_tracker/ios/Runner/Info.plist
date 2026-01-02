@@ -12,6 +12,10 @@
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Esta app necesita acceder a tu ubicación para rastrear rutas.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Esta app necesita acceso continuo a tu ubicación para rastrear rutas en segundo plano.</string>
 	<key>CFBundleName</key>
 	<string>fitness_tracker</string>
 	<key>CFBundlePackageType</key>

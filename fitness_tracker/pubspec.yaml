@@ -42,8 +42,23 @@ dependencies:
   # Inyección de dependencias
   get_it: ^7.6.4
 
+
+
+  #  Autenticación biométrica
+  local_auth: ^2.2.0
+
+  
+
+  #  Sensores (acelerómetro, etc.)
+  sensors_plus: ^5.0.0
+
+
+#  Ubicación y GPS
+  geolocator: ^12.0.0
+
+
   # Manejo de permisos
-  permission_handler: ^11.0.1
+  permission_handler: ^11.4.0
   flutter_local_notifications: ^19.5.0
   timezone: ^0.10.1
 
